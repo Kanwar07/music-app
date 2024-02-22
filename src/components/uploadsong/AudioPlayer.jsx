@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import audioplayerstyle from "./AudioPlayer.module.css";
 
 function AudioPlayer() {
@@ -13,8 +13,27 @@ function AudioPlayer() {
 
   const [songs, setsongs] = useState(initialValue);
   const [name, setname] = useState(null);
-  const [currentSongIndex, setcurrentSongIndex] = useState(null);
+  const [currentsongindex, setcurrentsongindex] = useState(0);
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    const storedcurrentsongindex = parseInt(
+      localStorage.getItem("currentsongindex"),
+      10
+    );
+    const storedsongs = JSON.parse(localStorage.getItem("songs"));
+    console.log(storedcurrentsongindex, storedsongs);
+
+    if (storedcurrentsongindex || storedsongs) {
+      setcurrentsongindex(storedcurrentsongindex);
+      setsongs(storedsongs);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("currentsongindex", currentsongindex.toString());
+    localStorage.setItem("songs", JSON.stringify(songs));
+  }, [currentsongindex, songs]);
 
   const saveAudio = (event) => {
     const files = event.target.files;
@@ -28,14 +47,14 @@ function AudioPlayer() {
       },
     ]);
 
-    if (currentSongIndex === null) {
-      setcurrentSongIndex(songs.length);
+    if (currentsongindex === null) {
+      setcurrentsongindex(songs.length);
     }
   };
 
   const playNextSong = () => {
-    setcurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
-    playaudio(currentSongIndex + 1);
+    setcurrentsongindex((prevIndex) => (prevIndex + 1) % songs.length);
+    playaudio(currentsongindex + 1);
   };
 
   const playaudio = (index) => {
@@ -45,7 +64,7 @@ function AudioPlayer() {
       audioElement.src = songs[index]?.url;
       audioElement.load();
       setname(songs[index]?.songname);
-      setcurrentSongIndex(index);
+      setcurrentsongindex(index);
     }
   };
 
@@ -81,7 +100,7 @@ function AudioPlayer() {
               id="upload"
               name="avatar"
               onChange={saveAudio}
-              style={{ padding: "1rem", paddingLeft: "25%" }}
+              style={{ padding: "2rem", paddingLeft: "25%" }}
             />
             <audio
               ref={audioRef}
@@ -90,7 +109,7 @@ function AudioPlayer() {
               onEnded={playNextSong}
               style={{ padding: "1rem" }}
             >
-              <source src={songs[currentSongIndex]?.url} id="src" />
+              <source src={songs[currentsongindex]?.url} id="src" />
             </audio>
           </div>
         </div>
