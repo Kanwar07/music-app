@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import audioplayerstyle from "./AudioPlayer.module.css";
 
 function AudioPlayer() {
@@ -6,29 +6,6 @@ function AudioPlayer() {
   const [name, setname] = useState(null);
   const [currentsongindex, setcurrentsongindex] = useState(0);
   const audioRef = useRef(null);
-
-  useEffect(() => {
-    const storedcurrentsongindex = parseInt(
-      localStorage.getItem("currentsongindex"),
-      10
-    );
-    const storedsongs = JSON.parse(localStorage.getItem("songs"));
-
-    if (!isNaN(storedcurrentsongindex) && storedsongs) {
-      setcurrentsongindex(storedcurrentsongindex);
-      setsongs(storedsongs);
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("Here");
-    localStorage.setItem("currentsongindex", currentsongindex.toString());
-    localStorage.setItem("songs", JSON.stringify(songs));
-  }, [currentsongindex, songs]);
-
-  const handleclear = () => {
-    localStorage.clear();
-  };
 
   const saveAudio = (event) => {
     const files = event.target.files;
@@ -90,9 +67,6 @@ function AudioPlayer() {
               ) : (
                 <div>Choose a song to play</div>
               )}
-            </div>
-            <div className={audioplayerstyle.button} onClick={handleclear}>
-              Clear
             </div>
           </div>
           <div className={audioplayerstyle.addsong}>
