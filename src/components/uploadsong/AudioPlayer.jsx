@@ -26,6 +26,10 @@ function AudioPlayer() {
     localStorage.setItem("songs", JSON.stringify(songs));
   }, [currentsongindex, songs]);
 
+  const handleclear = () => {
+    localStorage.clear();
+  };
+
   const saveAudio = (event) => {
     const files = event.target.files;
     setsongs([
@@ -67,7 +71,7 @@ function AudioPlayer() {
             <div style={{ marginBottom: "4rem" }}>
               Start Adding Songs to Play
             </div>
-            <div>
+            <div style={{ marginBottom: "4rem" }}>
               {songs.length !== 0 ? (
                 songs.map((song, index) => {
                   const { songname } = song;
@@ -86,6 +90,9 @@ function AudioPlayer() {
               ) : (
                 <div>Choose a song to play</div>
               )}
+            </div>
+            <div className={audioplayerstyle.button} onClick={handleclear}>
+              Clear
             </div>
           </div>
           <div className={audioplayerstyle.addsong}>
