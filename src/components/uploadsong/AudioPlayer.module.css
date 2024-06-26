@@ -1,7 +1,3 @@
-body {
-  font-family: "Lucida Console", "Courier New", monospace;
-}
-
 .container {
   position: relative;
 }
@@ -20,6 +16,12 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: center;
+}
+
+.innerdiv {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 

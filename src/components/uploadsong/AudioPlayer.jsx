@@ -2,16 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import audioplayerstyle from "./AudioPlayer.module.css";
 
 function AudioPlayer() {
-  const initialValue = [
-    {
-      songname: "Start Adding Songs to Play",
-      url: "",
-      image:
-        "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1948&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    },
-  ];
-
-  const [songs, setsongs] = useState(initialValue);
+  const [songs, setsongs] = useState([]);
   const [name, setname] = useState(null);
   const [currentsongindex, setcurrentsongindex] = useState(0);
   const audioRef = useRef(null);
@@ -22,15 +13,15 @@ function AudioPlayer() {
       10
     );
     const storedsongs = JSON.parse(localStorage.getItem("songs"));
-    console.log(storedcurrentsongindex, storedsongs);
 
-    if (storedcurrentsongindex || storedsongs) {
+    if (!isNaN(storedcurrentsongindex) && storedsongs) {
       setcurrentsongindex(storedcurrentsongindex);
       setsongs(storedsongs);
     }
   }, []);
 
   useEffect(() => {
+    console.log("Here");
     localStorage.setItem("currentsongindex", currentsongindex.toString());
     localStorage.setItem("songs", JSON.stringify(songs));
   }, [currentsongindex, songs]);
@@ -72,22 +63,30 @@ function AudioPlayer() {
     <>
       <div className={audioplayerstyle.container}>
         <div className={audioplayerstyle.main}>
-          <div>
-            {songs.length !== 0 &&
-              songs.map((song, index) => {
-                const { songname } = song;
-                return (
-                  <div key={index} className={audioplayerstyle.list}>
-                    <div style={{ padding: "0.5rem" }}>{songname}</div>
-                    <button
-                      onClick={() => playaudio(index)}
-                      className={audioplayerstyle.button}
-                    >
-                      Play
-                    </button>
-                  </div>
-                );
-              })}
+          <div className={audioplayerstyle.innerdiv}>
+            <div style={{ marginBottom: "4rem" }}>
+              Start Adding Songs to Play
+            </div>
+            <div>
+              {songs.length !== 0 ? (
+                songs.map((song, index) => {
+                  const { songname } = song;
+                  return (
+                    <div key={index} className={audioplayerstyle.list}>
+                      <div style={{ padding: "0.5rem" }}>{songname}</div>
+                      <button
+                        onClick={() => playaudio(index)}
+                        className={audioplayerstyle.button}
+                      >
+                        Play
+                      </button>
+                    </div>
+                  );
+                })
+              ) : (
+                <div>Choose a song to play</div>
+              )}
+            </div>
           </div>
           <div className={audioplayerstyle.addsong}>
             <img
